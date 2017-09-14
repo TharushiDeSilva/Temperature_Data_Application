@@ -1,0 +1,145 @@
+@font-face {
+  font-family: "Open Sans";
+  src: url("../fonts/open-sans-regular.woff") format("woff");
+  font-style: normal;
+  font-weight: normal;
+}
+
+html, body {
+    box-sizing: border-box;
+    height: 100vh;
+    max-height: 100vh;
+    margin: 0;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+}
+
+::selection {
+    background: #4bd18e;
+}
+
+*, *:before, *:after {
+    box-sizing: inherit;
+}
+
+* {
+    outline: none;
+}
+
+body {
+  font-family: "Open Sans", sans-serif;
+  font-size: 16px;
+  line-height: 1.56261;
+  font-weight: 400;
+  margin: 0;
+  padding: 0;
+  outline: none;
+  overflow: visible;
+  text-align: center;
+}
+
+body::before {
+    content: ' ';
+    display: block;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    opacity: 0.2;
+    background-repeat: no-repeat;
+    background-position: 50% 0;
+    -ms-background-size: cover;
+    -o-background-size: cover;
+    -moz-background-size: cover;
+    -webkit-background-size: cover;
+    background-size: cover;
+    background-image: url('../images/background-image.jpg');
+}
+
+.title {
+    margin-bottom: 2rem;
+}
+
+input:focus {
+    border: 1px solid #873e8d;
+}
+
+h1 {
+    font-weight: bold;
+    background-color: #9900cc;
+    margin: 100px;
+    color: white;
+}
+
+button {
+    margin-right: 0;
+    display: inline-block;
+    width: 10%;
+    height: 2rem;
+    background-color: #9900cc;
+    font-size: 0.8rem;
+    color: #fff;
+    outline: none;
+    border: 1px transparent solid;
+    border-radius: 10px;
+    cursor: pointer;
+    font-family: "Open Sans", sans-serif;
+}
+
+#back-to-home{
+    width: 15%;
+    height: 3rem;
+}
+
+#view-data{
+    width:15%;
+    height: 2rem;
+    text-align: center;
+}
+
+fieldset{
+    width: 500px;
+    height: 180px;
+    position: center;
+    margin: auto;
+    border-radius: 10px;
+}
+
+legend {
+    background-color: #9900ff;
+    border-radius: 10px;
+    padding: 10px;
+    color: #fff;
+    align: center;
+}
+
+table{
+    margin: auto;
+    width: 700px;
+}
+
+th,td{
+    padding: 5px, 10px, 10px, 10px;
+}
+
+th{
+    text-align: left;
+}
+
+tr.even{
+    background-color: #d980ff;
+}
+tr.odd{
+    background-color: #f7e6ff;
+}
+button:focus {
+    border: 2px solid #333;
+}
+
+
+.back-white{
+    background-color: white;
+}
