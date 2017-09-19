@@ -6,9 +6,13 @@ import java.util.Date;
 import java.util.Random;
 
 public class SensorData {
+    private int sensorID;
     private String timeStamp;
     private double temperature;
     private double humidity;
+    private double heatIndex;
+    private String date;
+    private String time;
 
     public SensorData(){
         /*

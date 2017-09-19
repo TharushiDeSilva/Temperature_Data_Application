@@ -5,10 +5,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.Enumeration;
 import java.util.Properties;
 
@@ -36,15 +33,17 @@ public class UserDataHandler extends HttpServlet {
 
     //adding a new key, value pair
     private static void addNewUser(String key, String value, String comment) {
+        Properties prop = new Properties();
+        InputStream input = null;
+        OutputStream output = null;
         try{
-            FileInputStream in = new FileInputStream("user-data.properties");
-            Properties prop = new Properties();
-            prop.load(in);
-            in.close();
-            FileOutputStream out = new FileOutputStream("user-data.properties");
+            input = Thread.currentThread().getContextClassLoader().getResourceAsStream("user-data.properties");
+            prop.load(input);
+            input.close();
+            output = new FileOutputStream("user-data.properties");
             prop.setProperty(key, value);
-            prop.store(out, comment);
-            out.close();
+            prop.store(output, comment);
+            output.close();
         }catch (IOException io){
             io.printStackTrace();
         }
@@ -103,18 +102,8 @@ public class UserDataHandler extends HttpServlet {
 
         //this means data ara shown to the user.
         else if(request.getParameterMap().containsKey("accessType")) {
-
-            //set an instance of temperature and humidity data and retrieve their values.
-            SensorData data = new SensorData();
-            String timeStamp = data.getTimeStamp();
-            String temperature = Double.toString(data.getTemperature());
-            String humidity = Double.toString(data.getHumidity());
-
-            request.setAttribute("timeStamp", timeStamp);
-            request.setAttribute("temperature", temperature);
-            request.setAttribute("humidity", humidity);
-
-            request.getRequestDispatcher("/ftl/visualData.ftl").forward(request, response);
+            //request.getRequestDispatcher("weather-data").forward(request, response);
+            response.sendRedirect("weather-data");
         }
     }
 }
