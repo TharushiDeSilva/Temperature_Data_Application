@@ -12,28 +12,32 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.util.Properties;
+import java.util.Scanner;
 
 @WebServlet ("/weather-data")
 public class WeatherDataHandler extends HttpServlet{
-    public int sensorID = 0;
+    public int sensorID = 2;
     public String date = "default";
     public String time = "default";
+    public String dateTime = "default";
     public Double temperature = 0.00;
     public Double humidity = 0.00;
     public Double heatIndex = 0.00;
 
+    public int logCount = 0;        //Used as an interval to log data.
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         request.setAttribute("sensorID", Integer.toString(sensorID));
         request.setAttribute("date", date);
         request.setAttribute("time", time);
+        request.setAttribute("dateTime", date+"-"+time);
         request.setAttribute("temperature", Double.toString(temperature));
         request.setAttribute("humidity", Double.toString(humidity));
         request.setAttribute("heatIndex", Double.toString(heatIndex));
-        request.getRequestDispatcher("/ftl/weatherData.ftl").forward(request, response);
+        writeToJSONAsString();
 
-
+        request.getRequestDispatcher("/ftl/hourlyTemperatureData.ftl").forward(request, response);
     }
 
     @Override
@@ -44,7 +48,13 @@ public class WeatherDataHandler extends HttpServlet{
 
         //writing to the json file. Do not keep the file weatherData.json empty.
         writeToJSON();
+        updateTemperatureFile();
+        /*logCount +=1;
 
+        if(logCount == 5) {
+            writeToJSONAsString();
+            logCount = 0;
+        }*/
     }
 
 
@@ -138,25 +148,30 @@ public class WeatherDataHandler extends HttpServlet{
         this.temperature = Double.parseDouble(paramArray[15]);
         this.humidity = Double.parseDouble(paramArray[19]);
         this.heatIndex = Double.parseDouble(paramArray[23]);
-
+        this.dateTime = paramArray[7] + "-" + paramArray[11];
     }
 
-
-    public void readFromJSON(){
+    public JSONArray readFromJSON(){
         FileInputStream input = null;
+        JSONArray jsonArray = null;
         try {
             input = new FileInputStream(getServletContext().getRealPath("/WEB-INF/classes/json/weatherData.json"));
             JSONParser jsonParser = new JSONParser();
             //JSONObject jsonObject = (JSONObject) jsonParser.parse(new InputStreamReader(input, "UTF-8"));  //If there is only one JSON Object in the file
-            JSONArray jsonArray = (JSONArray) jsonParser.parse(new InputStreamReader(input, "UTF-8"));
-            System.out.println(jsonArray);
+            jsonArray = (JSONArray) jsonParser.parse(new InputStreamReader(input, "UTF-8"));
+            //System.out.println(jsonArray);
             input.close();
         }catch (IOException e){
             e.printStackTrace();
         }catch (ParseException e){
             e.printStackTrace();
         }
+        return jsonArray;
     }
+    /*public String prepareDataForCurrentReport(){
+        JSONArray dataArray = readFromJSON();
+        dataArray.
+    }*/
 
     public void writeToJSON() {
         FileInputStream fileInputStream;
@@ -171,10 +186,10 @@ public class WeatherDataHandler extends HttpServlet{
         jsonObject.put("heatIndex", heatIndex);
 
         try{
-            fileInputStream = new FileInputStream(getServletContext().getRealPath("/WEB-INF/classes/json/weatherData.json"));
+            fileInputStream = new FileInputStream(getServletContext().getRealPath("/static/json/weatherData.json"));
             JSONArray jsonArray = (JSONArray) jsonParser.parse(new InputStreamReader(fileInputStream, "UTF-8"));
             jsonArray.add(jsonObject);
-            fileOutputStream = new FileOutputStream(getServletContext().getRealPath("/WEB-INF/classes/json/weatherData.json"));
+            fileOutputStream = new FileOutputStream(getServletContext().getRealPath("/static/json/weatherData.json"));
             OutputStreamWriter writer = new OutputStreamWriter(fileOutputStream);
             writer.write(jsonArray.toString());
             writer.close();
@@ -184,6 +199,63 @@ public class WeatherDataHandler extends HttpServlet{
             e.printStackTrace();
         }catch (ParseException e){
             e.printStackTrace();
+        }
+    }
+
+    public void updateTemperatureFile() {
+        //don't leave this file empty.
+        FileInputStream fileInputStream;
+        FileOutputStream fileOutputStream;
+        JSONParser jsonParser = new JSONParser();
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("sensorID",sensorID);
+        jsonObject.put("dateTime", dateTime);
+        jsonObject.put("temperature",temperature);
+        //check the date of the parameters set and add the data into the relevant file.
+
+        try{
+
+            fileInputStream = new FileInputStream(getServletContext().getRealPath("/static/json/temperatureData.json"));
+            JSONArray jsonArray = (JSONArray) jsonParser.parse(new InputStreamReader(fileInputStream, "UTF-8"));
+            jsonArray.add(jsonObject);
+            fileOutputStream = new FileOutputStream(getServletContext().getRealPath("/static/json/temperatureData.json"));
+            OutputStreamWriter writer = new OutputStreamWriter(fileOutputStream);
+            writer.write(jsonArray.toString());
+            writer.close();
+            fileInputStream.close();
+            fileInputStream.close();
+        }catch (IOException e){
+            e.printStackTrace();
+        }catch (ParseException e){
+            e.printStackTrace();
+        }
+    }
+    public boolean checkExistence(String fileName) {
+        boolean status = false;
+        String pathname = "/static/json/"+fileName;
+        File f = new File(getServletContext().getRealPath(pathname));
+        if(f.isFile()){
+            status = true;
+        }
+        return status;
+    }
+
+    public void writeToJSONAsString() {
+        String toWrite = "data ='";
+        FileInputStream fileInputStream;
+        FileOutputStream fileOutputStream;
+        try {
+            fileInputStream = new FileInputStream(getServletContext().getRealPath("static/json/temperatureData.json"));
+            toWrite += new Scanner(fileInputStream, "UTF-8").useDelimiter("\\A").next();
+            toWrite += "'";
+            fileOutputStream = new FileOutputStream(getServletContext().getRealPath("/static/json/temperatureDataString.json"));    //creates an new file if doesn't exist
+            OutputStreamWriter writer = new OutputStreamWriter(fileOutputStream);
+            writer.write(toWrite);
+            writer.close();
+            fileInputStream.close();
+            fileOutputStream.close();
+        }catch (IOException io){
+            io.printStackTrace();
         }
     }
 
