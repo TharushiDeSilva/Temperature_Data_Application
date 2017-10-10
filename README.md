@@ -2,5 +2,7 @@ mvn clean install
 place the temperature-data-application.war in apache tomcat--> webapps
 Http://localhost:8080/temperature-data-application
 
-Stores sensor data in the json file weatherData.json
-the data is stored in the json format for the future reference of data visualization using javascript libraries.
+D3.js library is used for svg based data visualizations.
+HTML layout is not fixed for custom screen.
+Data is loaded from a json String.
+will be loaded from the cache in the next step.
