@@ -1,1 +1,0 @@
-data = '[{"sensorID":1, "date":"22-09-2017", "time":"14-45-00", "temperature":23.00, "humidity":20.00, "heatIndex":22.50},{"sensorID":2,"date":"22-09-2017","time":"14-50-00","temperature":30.00,"humidity":50.00,"heatIndex":22.50}]';

@@ -7,13 +7,16 @@
 </head>
 
 <body>
-<fieldset>
-    <legend> Please Enter Your Name</legend>
+    <div class="loginBox">
+        <fieldset>
+            <legend> Please Enter Your Name</legend>
 
-    USERNAME:<input id="username" type="text"><br><br>
-    <button type="submit" id="submit" onclick="loginOperation('user-access')">login</button><br>
+            <label class="loginLabel">USERNAME:</label><input id="username" type="text"><br><br>
+            <!--label class="loginLabel">PASSWORD:</label><input id="password" type="password"><br><br-->
+            <button type="submit" id="submit" onclick="loginOperation('user-access')">login</button><br>
 
-</fieldset>
+        </fieldset>
+    </div>
 </body>
 
 </html>

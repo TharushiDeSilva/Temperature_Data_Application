@@ -40,6 +40,29 @@ function loginOperation(targetServlet){
      form.submit();
 }
 
+function login(){
+    var url = window.location.href;
+
+    var form = document.createElement("form");
+    form.setAttribute("method", "post");
+    form.setAttribute("action",  serverPath + 'user-access' + window.location.search);
+
+     var nameField = document.createElement("input");
+     nameField.setAttribute("type", "hidden");
+     nameField.setAttribute("name", "username");
+     nameField.setAttribute("value",  document.getElementById("uname").value);
+     form.appendChild(nameField);
+
+     var passwordField = document.createElement("input");
+     passwordField.setAttribute("type", "hidden");
+     passwordField.setAttribute("name", "password");
+     passwordField.setAttribute("value",  document.getElementById("pwd").value);
+     form.appendChild(passwordField);
+
+     document.body.appendChild(form);
+     form.submit();
+}
+
 function viewData(targetServlet) {
     var form = document.createElement("form");
     form.setAttribute("method", "post");
